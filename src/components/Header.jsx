@@ -1,35 +1,40 @@
 import React from "react";
 import aaronDouglasLogoWhite from "../assets/AaronDouglasLogo White.png";
 import aaronDouglasLogoBlack from "../assets/AaronDouglasLogoBlack.png";
+import corekindLogo from "../assets/CoreKind_Logo_White.PNG";
 
-export default function Header({ mode, onModeChange, theme, setTheme, onOpenContext, styles }) {
+export default function Header({ mode, onModeChange, theme, setTheme, onOpenContext, contextButtonRef }) {
   const aaronDouglasLogo = theme === "night" ? aaronDouglasLogoWhite : aaronDouglasLogoBlack;
 
   return (
-    <header style={styles.header}>
-      <div style={styles.headerLeft}>
-        <div style={styles.brandRow}>
-          <div style={styles.corekindLogoPlaceholder} title="CoreKind logo placeholder">
-            <span style={styles.corekindPlaceholderText}>CK</span>
-          </div>
+    <header className="app-header">
+      <div className="app-header-left">
+        <div className="app-brand-row">
           <img
-            src={aaronDouglasLogo}
-            alt="Aaron Douglas Institute"
-            style={styles.brandLogo}
+            src={corekindLogo}
+            alt="CoreKind"
+            className="app-brand-logo"
             width={36}
             height={36}
           />
-          <h1 style={styles.h1}>CoreKind Aaron Douglas Institute</h1>
+          <img
+            src={aaronDouglasLogo}
+            alt="Aaron Douglas LLC"
+            className="app-brand-logo"
+            width={36}
+            height={36}
+          />
+          <h1 className="app-h1">CoreKind Aaron Douglas Prompt Library</h1>
         </div>
-        <p style={styles.sub}>Choose a mode, fill your context, then copy prompts.</p>
+        <p className="app-sub">Set your context, pick a prompt, then copy.</p>
       </div>
-      <div style={styles.headerControls}>
-        <div style={styles.tabRow} role="tablist" aria-label="Library mode">
+      <div className="app-header-controls">
+        <div className="tab-row" role="tablist" aria-label="Library mode">
           <button
             type="button"
             role="tab"
             aria-selected={mode === "general"}
-            style={mode === "general" ? styles.tabActive : styles.tab}
+            className={mode === "general" ? "tab tab-active" : "tab"}
             onClick={() => onModeChange("general")}
           >
             Everyday & Creative
@@ -38,7 +43,7 @@ export default function Header({ mode, onModeChange, theme, setTheme, onOpenCont
             type="button"
             role="tab"
             aria-selected={mode === "business"}
-            style={mode === "business" ? styles.tabActive : styles.tab}
+            className={mode === "business" ? "tab tab-active" : "tab"}
             onClick={() => onModeChange("business")}
           >
             Business
@@ -46,16 +51,17 @@ export default function Header({ mode, onModeChange, theme, setTheme, onOpenCont
         </div>
         <button
           type="button"
-          style={styles.themeBtn}
+          className="btn-icon btn-icon-theme"
           onClick={() => setTheme((t) => (t === "night" ? "day" : "night"))}
           aria-label={theme === "night" ? "Switch to day mode" : "Switch to night mode"}
           title={theme === "night" ? "Day mode" : "Night mode"}
         >
-          {theme === "night" ? "Day" : "Night"}
+          <span aria-hidden="true">{theme === "night" ? "☀" : "🌙"}</span>
         </button>
         <button
+          ref={contextButtonRef}
           type="button"
-          style={styles.contextBtn}
+          className="btn-primary btn-cta-context"
           onClick={onOpenContext}
           aria-label="Open context"
         >

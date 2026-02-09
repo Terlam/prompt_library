@@ -1,42 +1,42 @@
 import React from "react";
 
-export default function PromptCard({ prompt, renderedText, isExpanded, onToggle, onCopy, isCopied, styles }) {
+export default function PromptCard({ prompt, renderedText, isExpanded, onToggle, onCopy, isCopied }) {
   return (
     <article
-      style={styles.promptCard}
+      className="prompt-card"
       aria-label={`Prompt: ${prompt.title}`}
       aria-expanded={isExpanded}
     >
       <button
         type="button"
-        style={styles.promptCardHeader}
+        className="prompt-card-header"
         onClick={() => onToggle(prompt.id)}
         aria-expanded={isExpanded}
         aria-controls={`prompt-body-${prompt.id}`}
         id={`prompt-header-${prompt.id}`}
       >
-        <div style={styles.promptCardHeaderContent}>
-          <span style={styles.category}>{prompt.category}</span>
-          <h3 style={styles.promptTitle}>{prompt.title}</h3>
-          <p style={styles.promptDesc}>{prompt.description}</p>
+        <div className="prompt-card-header-content">
+          <span className="prompt-category-pill">{prompt.category}</span>
+          <h3 className="prompt-title">{prompt.title}</h3>
+          <p className="prompt-desc">{prompt.description}</p>
         </div>
-        <span style={styles.chevron} aria-hidden="true">
+        <span className="prompt-chevron" aria-hidden="true">
           {isExpanded ? "−" : "+"}
         </span>
       </button>
       {isExpanded && (
         <div
           id={`prompt-body-${prompt.id}`}
-          style={styles.promptCardBody}
+          className="prompt-card-body"
           role="region"
           aria-labelledby={`prompt-header-${prompt.id}`}
         >
-          <pre style={styles.pre} tabIndex={0} aria-label="Rendered prompt text">
+          <pre className="prompt-pre" tabIndex={0} aria-label="Rendered prompt text">
             {renderedText}
           </pre>
           <button
             type="button"
-            style={styles.primaryBtn}
+            className="btn-primary prompt-copy-btn"
             onClick={(e) => {
               e.stopPropagation();
               onCopy(renderedText, prompt.id);

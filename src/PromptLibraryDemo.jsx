@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Header from "./components/Header.jsx";
 import ContextPanel from "./components/ContextPanel.jsx";
 import PromptList from "./components/PromptList.jsx";
@@ -445,6 +445,7 @@ export default function PromptLibraryDemo() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [copiedId, setCopiedId] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+  const contextButtonRef = useRef(null);
 
   const promptsByMode = useMemo(() => {
     return PROMPTS.filter((p) => p.contextType === mode);
@@ -482,10 +483,8 @@ export default function PromptLibraryDemo() {
   const businessConstraintsBullets = toBullets(businessContext.constraints);
   const generalConstraintsBullets = toBullets(generalContext.constraints);
 
-  const styles = getStyles(theme);
-
   return (
-    <div style={styles.page}>
+    <div className="app-page" data-theme={theme}>
       <Header
         mode={mode}
         onModeChange={(m) => {
@@ -495,12 +494,15 @@ export default function PromptLibraryDemo() {
         theme={theme}
         setTheme={setTheme}
         onOpenContext={() => setContextOpen(true)}
-        styles={styles}
+        contextButtonRef={contextButtonRef}
       />
 
       <ContextPanel
         open={contextOpen}
-        onClose={() => setContextOpen(false)}
+        onClose={() => {
+          contextButtonRef.current?.focus();
+          setContextOpen(false);
+        }}
         mode={mode}
         generalContext={generalContext}
         businessContext={businessContext}
@@ -511,12 +513,11 @@ export default function PromptLibraryDemo() {
         generalConstraintsBullets={generalConstraintsBullets}
         businessValuesBullets={businessValuesBullets}
         businessConstraintsBullets={businessConstraintsBullets}
-        styles={styles}
         DEFAULT_GENERAL_CONTEXT={DEFAULT_GENERAL_CONTEXT}
         DEFAULT_BUSINESS_CONTEXT={DEFAULT_BUSINESS_CONTEXT}
       />
 
-      <main style={styles.main}>
+      <main className="app-main">
         <PromptList
           prompts={filteredPrompts}
           categories={categories}
@@ -529,319 +530,17 @@ export default function PromptLibraryDemo() {
           renderTemplate={renderTemplate}
           generalContext={generalContext}
           businessContext={businessContext}
-          styles={styles}
         />
       </main>
 
-      <footer style={styles.footer}>
+      <footer className="app-footer">
         <small>
-          Context in drawer • Prompts collapse/expand • Night/day toggle
+          Paste copied prompts into ChatGPT, Claude, or any AI assistant. Built in partnership with{" "}
+          <a href="https://aarondouglas.us" target="_blank" rel="noopener noreferrer">Aaron Douglas LLC</a>
+          {" "}and{" "}
+          <a href="https://corekind.com" target="_blank" rel="noopener noreferrer">Core Kind</a>.
         </small>
       </footer>
     </div>
   );
-}
-
-function getStyles(theme) {
-  const isNight = theme === "night";
-  const pageBg = isNight ? "#0b0d12" : "#f5f5f7";
-  const text = isNight ? "#e9ecf1" : "#1a1a1a";
-  const textMuted = isNight ? "#b9c0cc" : "#6e6e73";
-  const cardBg = isNight ? "#0f131b" : "#ffffff";
-  const cardBorder = isNight ? "#20283a" : "#e5e5e7";
-  const inputBg = isNight ? "#0b0d12" : "#ffffff";
-  const inputBorder = isNight ? "#2a3140" : "#d1d1d6";
-  const preBg = isNight ? "#07090d" : "#f5f5f7";
-  const primary = "#3758F9";
-  const tabInactiveBg = isNight ? "#161a23" : "#e5e5e7";
-  const tabInactiveColor = isNight ? "#9aa3b4" : "#6e6e73";
-
-  return {
-    page: {
-      fontFamily: 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial',
-      padding: 16,
-      background: pageBg,
-      color: text,
-      minHeight: "100vh",
-      boxSizing: "border-box",
-    },
-    header: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 12,
-      alignItems: "flex-start",
-      justifyContent: "space-between",
-      marginBottom: 16,
-    },
-    headerLeft: { flex: "1 1 200px", minWidth: 0 },
-    brandRow: {
-      display: "flex",
-      alignItems: "center",
-      gap: 10,
-    },
-    brandLogo: {
-      width: 36,
-      height: 36,
-      objectFit: "contain",
-      flexShrink: 0,
-    },
-    corekindLogoPlaceholder: {
-      width: 36,
-      height: 36,
-      borderRadius: 8,
-      background: tabInactiveBg,
-      border: `1px solid ${cardBorder}`,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexShrink: 0,
-    },
-    corekindPlaceholderText: {
-      fontSize: 12,
-      fontWeight: 700,
-      color: textMuted,
-      letterSpacing: "0.02em",
-    },
-    headerControls: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 8,
-      alignItems: "center",
-    },
-    h1: { margin: 0, fontSize: 20, letterSpacing: 0.2, lineHeight: 1.3 },
-    sub: { margin: "4px 0 0", color: textMuted, maxWidth: 480, lineHeight: 1.4, fontSize: 14 },
-    tabRow: {
-      display: "flex",
-      gap: 0,
-      borderRadius: 12,
-      overflow: "hidden",
-      border: `1px solid ${cardBorder}`,
-    },
-    tab: {
-      padding: "10px 14px",
-      fontSize: 14,
-      fontWeight: 500,
-      background: tabInactiveBg,
-      border: "none",
-      color: tabInactiveColor,
-      cursor: "pointer",
-      minHeight: 44,
-    },
-    tabActive: {
-      padding: "10px 14px",
-      fontSize: 14,
-      fontWeight: 600,
-      background: primary,
-      border: "none",
-      color: "white",
-      cursor: "pointer",
-      minHeight: 44,
-    },
-    themeBtn: {
-      padding: "10px 14px",
-      fontSize: 14,
-      fontWeight: 500,
-      background: tabInactiveBg,
-      border: `1px solid ${cardBorder}`,
-      color: tabInactiveColor,
-      borderRadius: 12,
-      cursor: "pointer",
-      minHeight: 44,
-    },
-    contextBtn: {
-      padding: "10px 14px",
-      fontSize: 14,
-      fontWeight: 600,
-      background: primary,
-      border: "none",
-      color: "white",
-      borderRadius: 12,
-      cursor: "pointer",
-      minHeight: 44,
-    },
-    main: {
-      maxWidth: "100%",
-      overflowX: "hidden",
-    },
-    drawerOverlay: {
-      position: "fixed",
-      inset: 0,
-      background: "rgba(0,0,0,0.4)",
-      zIndex: 1000,
-      cursor: "pointer",
-    },
-    drawer: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "min(400px, 100vw)",
-      maxWidth: "100%",
-      height: "100%",
-      background: cardBg,
-      borderRight: `1px solid ${cardBorder}`,
-      zIndex: 1001,
-      overflowY: "auto",
-      boxShadow: "4px 0 24px rgba(0,0,0,0.15)",
-    },
-    drawerHeader: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: 16,
-      borderBottom: `1px solid ${cardBorder}`,
-    },
-    drawerTitle: { margin: 0, fontSize: 18 },
-    drawerBody: { padding: 16 },
-    closeBtn: {
-      padding: "8px 14px",
-      fontSize: 14,
-      fontWeight: 600,
-      background: tabInactiveBg,
-      border: `1px solid ${cardBorder}`,
-      color: text,
-      borderRadius: 10,
-      cursor: "pointer",
-    },
-    formGrid: { display: "grid", gap: 10, marginTop: 12 },
-    label: { display: "grid", gap: 6, fontSize: 12, color: textMuted },
-    input: {
-      background: inputBg,
-      border: `1px solid ${inputBorder}`,
-      color: text,
-      borderRadius: 10,
-      padding: "10px 10px",
-      outline: "none",
-    },
-    textarea: {
-      background: inputBg,
-      border: `1px solid ${inputBorder}`,
-      color: text,
-      borderRadius: 10,
-      padding: "10px 10px",
-      outline: "none",
-      resize: "vertical",
-    },
-    previewBox: {
-      marginTop: 12,
-      padding: 12,
-      borderRadius: 12,
-      border: `1px dashed ${inputBorder}`,
-      background: inputBg,
-    },
-    h3: { margin: "0 0 8px", fontSize: 14, color: text },
-    previewLine: { margin: "6px 0", color: textMuted, lineHeight: 1.35 },
-    secondaryBtn: {
-      marginTop: 12,
-      background: tabInactiveBg,
-      border: `1px solid ${cardBorder}`,
-      color: text,
-      borderRadius: 12,
-      padding: "10px 12px",
-      cursor: "pointer",
-      fontWeight: 600,
-    },
-    promptListSection: {
-      background: cardBg,
-      border: `1px solid ${cardBorder}`,
-      borderRadius: 16,
-      padding: 16,
-      boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-      overflow: "hidden",
-      minWidth: 0,
-    },
-    libraryHeader: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 12,
-      alignItems: "flex-end",
-      justifyContent: "space-between",
-      minWidth: 0,
-    },
-    h2: { margin: 0, fontSize: 18, minWidth: 0 },
-    categoryLabel: {
-      display: "grid",
-      gap: 6,
-      fontSize: 12,
-      color: textMuted,
-      maxWidth: "100%",
-      minWidth: 0,
-      width: "100%",
-    },
-    categorySelect: {
-      width: "100%",
-      maxWidth: 260,
-      minWidth: 0,
-      boxSizing: "border-box",
-    },
-    promptList: { display: "grid", gap: 12, marginTop: 12 },
-    promptCard: {
-      background: inputBg,
-      border: `1px solid ${cardBorder}`,
-      borderRadius: 16,
-      padding: 0,
-      overflow: "hidden",
-    },
-    promptCardHeader: {
-      width: "100%",
-      display: "flex",
-      gap: 12,
-      alignItems: "flex-start",
-      justifyContent: "space-between",
-      padding: 14,
-      background: "transparent",
-      border: "none",
-      cursor: "pointer",
-      textAlign: "left",
-      font: "inherit",
-      color: "inherit",
-      minHeight: 44,
-    },
-    promptCardHeaderContent: { flex: 1 },
-    category: {
-      display: "inline-block",
-      fontSize: 11,
-      padding: "4px 8px",
-      borderRadius: 999,
-      background: tabInactiveBg,
-      border: `1px solid ${cardBorder}`,
-      color: textMuted,
-      marginBottom: 6,
-    },
-    promptTitle: { margin: 0, fontSize: 15 },
-    promptDesc: { margin: "6px 0 0", color: textMuted, lineHeight: 1.35, fontSize: 13 },
-    chevron: {
-      fontSize: 18,
-      fontWeight: 600,
-      color: textMuted,
-      flexShrink: 0,
-    },
-    promptCardBody: {
-      padding: "0 14px 14px",
-      borderTop: `1px solid ${cardBorder}`,
-    },
-    pre: {
-      margin: "0 0 12px",
-      padding: 12,
-      borderRadius: 12,
-      border: `1px solid ${cardBorder}`,
-      background: preBg,
-      color: text,
-      overflowX: "auto",
-      whiteSpace: "pre-wrap",
-      lineHeight: 1.4,
-      fontSize: 12.5,
-    },
-    primaryBtn: {
-      background: primary,
-      border: `1px solid ${primary}`,
-      color: "white",
-      borderRadius: 12,
-      padding: "10px 12px",
-      cursor: "pointer",
-      fontWeight: 600,
-      minHeight: 44,
-      whiteSpace: "nowrap",
-    },
-    footer: { marginTop: 14, color: textMuted, fontSize: 13 },
-  };
 }

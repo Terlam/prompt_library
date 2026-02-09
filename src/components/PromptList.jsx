@@ -13,22 +13,24 @@ export default function PromptList({
   renderTemplate,
   generalContext,
   businessContext,
-  styles,
 }) {
   function handleToggle(id) {
     setExpandedId((prev) => (prev === id ? null : id));
   }
 
   return (
-    <section style={styles.promptListSection} aria-labelledby="category-label">
-      <div style={styles.libraryHeader}>
-        <h2 id="category-label" style={styles.h2}>
-          Category
+    <section className="prompt-list-section" aria-labelledby="category-label">
+      <p className="app-instructions" id="how-to-use">
+        <strong>How to use:</strong> Open <strong>Context</strong> and add your details → expand a prompt and review the filled text → <strong>Copy</strong> and paste into your AI assistant (e.g. ChatGPT, Claude).
+      </p>
+      <div className="library-header">
+        <h2 id="category-label" className="library-title">
+          Filter by category
         </h2>
-        <label style={styles.categoryLabel}>
+        <label className="category-label">
           Category
           <select
-            style={{ ...styles.input, ...(styles.categorySelect || {}) }}
+            className="form-select category-select"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             aria-label="Filter prompts by category"
@@ -41,7 +43,7 @@ export default function PromptList({
           </select>
         </label>
       </div>
-      <div style={styles.promptList}>
+      <div className="prompt-list">
         {prompts.map((p) => {
           const ctx = p.contextType === "general" ? generalContext : businessContext;
           const rendered = renderTemplate(p.template, ctx);
@@ -54,7 +56,6 @@ export default function PromptList({
               onToggle={handleToggle}
               onCopy={onCopy}
               isCopied={copiedId === p.id}
-              styles={styles}
             />
           );
         })}
