@@ -291,6 +291,27 @@
   color: var(--text);
 }
 
+.app-footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: inherit;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.app-footer-link:hover {
+  color: var(--text);
+}
+
+.app-footer-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* --- Drawer --- */
 .drawer-overlay {
   position: fixed;
@@ -336,6 +357,52 @@
   font-size: var(--font-13);
   color: var(--text-muted);
   line-height: 1.4;
+}
+
+.tips-section {
+  margin-bottom: var(--space-4);
+}
+
+.tips-section:last-child {
+  margin-bottom: 0;
+}
+
+.tips-section-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-14);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tips-section-body {
+  margin: 0;
+  font-size: var(--font-13);
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.tips-section-body code {
+  font-size: var(--font-12);
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--tab-inactive-bg);
+  border: 1px solid var(--card-border);
+}
+
+.tips-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: var(--font-13);
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.tips-list li {
+  margin-bottom: var(--space-2);
+}
+
+.tips-list li:last-child {
+  margin-bottom: 0;
 }
 
 /* --- Form --- */

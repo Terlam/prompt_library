@@ -1,10 +1,12 @@
 import React from "react";
 import aaronDouglasLogoWhite from "../assets/AaronDouglasLogo White.png";
 import aaronDouglasLogoBlack from "../assets/AaronDouglasLogoBlack.png";
-import corekindLogo from "../assets/CoreKind_Logo_White.PNG";
+import corekindLogoWhite from "../assets/CoreKind_Logo_White.PNG";
+import corekindLogoBlack from "../assets/CoreKind_logo_black.png";
 
 export default function Header({ mode, onModeChange, theme, setTheme, onOpenContext, contextButtonRef }) {
   const aaronDouglasLogo = theme === "night" ? aaronDouglasLogoWhite : aaronDouglasLogoBlack;
+  const corekindLogo = theme === "night" ? corekindLogoWhite : corekindLogoBlack;
 
   return (
     <header className="app-header">

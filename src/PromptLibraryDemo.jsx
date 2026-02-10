@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import Header from "./components/Header.jsx";
 import ContextPanel from "./components/ContextPanel.jsx";
 import PromptList from "./components/PromptList.jsx";
+import TipsSheet from "./components/TipsSheet.jsx";
 
 /**
  * Prompt Library Demo (no DB)
@@ -445,7 +446,9 @@ export default function PromptLibraryDemo() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [copiedId, setCopiedId] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+  const [tipsOpen, setTipsOpen] = useState(false);
   const contextButtonRef = useRef(null);
+  const tipsButtonRef = useRef(null);
 
   const promptsByMode = useMemo(() => {
     return PROMPTS.filter((p) => p.contextType === mode);
@@ -493,7 +496,10 @@ export default function PromptLibraryDemo() {
         }}
         theme={theme}
         setTheme={setTheme}
-        onOpenContext={() => setContextOpen(true)}
+        onOpenContext={() => {
+          if (tipsOpen) setTipsOpen(false);
+          setContextOpen(true);
+        }}
         contextButtonRef={contextButtonRef}
       />
 
@@ -517,6 +523,14 @@ export default function PromptLibraryDemo() {
         DEFAULT_BUSINESS_CONTEXT={DEFAULT_BUSINESS_CONTEXT}
       />
 
+      <TipsSheet
+        open={tipsOpen}
+        onClose={() => {
+          tipsButtonRef.current?.focus();
+          setTipsOpen(false);
+        }}
+      />
+
       <main className="app-main">
         <PromptList
           prompts={filteredPrompts}
@@ -535,6 +549,18 @@ export default function PromptLibraryDemo() {
 
       <footer className="app-footer">
         <small>
+          <button
+            ref={tipsButtonRef}
+            type="button"
+            className="app-footer-link"
+            onClick={() => {
+              if (contextOpen) setContextOpen(false);
+              setTipsOpen(true);
+            }}
+          >
+            Tips for better prompts
+          </button>
+          {" · "}
           Paste copied prompts into ChatGPT, Claude, or any AI assistant. Built in partnership with{" "}
           <a href="https://aarondouglas.us" target="_blank" rel="noopener noreferrer">Aaron Douglas LLC</a>
           {" "}and{" "}
