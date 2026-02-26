@@ -3,6 +3,17 @@ import Header from "./components/Header.jsx";
 import ContextPanel from "./components/ContextPanel.jsx";
 import PromptList from "./components/PromptList.jsx";
 import TipsSheet from "./components/TipsSheet.jsx";
+import OnboardingModal from "./components/OnboardingModal.jsx";
+
+function setOnboarded() {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() + 1);
+  document.cookie = `ck_onboarded=1;expires=${d.toUTCString()};path=/;SameSite=Lax`;
+}
+
+function isOnboarded() {
+  return document.cookie.split(";").some((c) => c.trim().startsWith("ck_onboarded="));
+}
 
 /**
  * Prompt Library Demo (no DB)
@@ -447,6 +458,7 @@ export default function PromptLibraryDemo() {
   const [copiedId, setCopiedId] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [tipsOpen, setTipsOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => !isOnboarded());
   const contextButtonRef = useRef(null);
   const tipsButtonRef = useRef(null);
 
@@ -474,6 +486,19 @@ export default function PromptLibraryDemo() {
     }
   }
 
+  async function copyAndLaunch(text, id) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      window.setTimeout(() => setCopiedId(null), 1500);
+      window.setTimeout(() => {
+        window.open("https://chatgpt.com", "_blank", "noopener,noreferrer");
+      }, 600);
+    } catch {
+      alert("Copy failed — your browser may block clipboard access.");
+    }
+  }
+
   function updateGeneralField(field) {
     return (e) => setGeneralContext((prev) => ({ ...prev, [field]: e.target.value }));
   }
@@ -488,6 +513,22 @@ export default function PromptLibraryDemo() {
 
   return (
     <div className="app-page" data-theme={theme}>
+      <OnboardingModal
+        open={showOnboarding}
+        onComplete={(openContext) => {
+          setOnboarded();
+          setShowOnboarding(false);
+          if (openContext) setContextOpen(true);
+        }}
+        onSkip={() => {
+          setOnboarded();
+          setShowOnboarding(false);
+        }}
+        onTopicChange={(value) => {
+          setGeneralContext((prev) => ({ ...prev, topic: value }));
+        }}
+      />
+
       <Header
         mode={mode}
         onModeChange={(m) => {
@@ -540,6 +581,7 @@ export default function PromptLibraryDemo() {
           expandedId={expandedId}
           setExpandedId={setExpandedId}
           onCopy={copy}
+          onCopyAndLaunch={copyAndLaunch}
           copiedId={copiedId}
           renderTemplate={renderTemplate}
           generalContext={generalContext}
