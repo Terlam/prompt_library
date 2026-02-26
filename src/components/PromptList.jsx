@@ -9,6 +9,7 @@ export default function PromptList({
   expandedId,
   setExpandedId,
   onCopy,
+  onCopyAndLaunch,
   copiedId,
   renderTemplate,
   generalContext,
@@ -55,6 +56,7 @@ export default function PromptList({
               isExpanded={expandedId === p.id}
               onToggle={handleToggle}
               onCopy={onCopy}
+              onCopyAndLaunch={onCopyAndLaunch}
               isCopied={copiedId === p.id}
             />
           );
